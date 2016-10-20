@@ -14,13 +14,14 @@ import java.util.Arrays;
 public class TerminalText {
 public static void main(String[] args) throws IOException {
 
-// Setup terminal and screen layers
+        // Setup terminal and screen layers
         Terminal terminal = new DefaultTerminalFactory().createTerminal();
         Screen screen = new TerminalScreen(terminal);
         screen.startScreen();
 
-// Create window to hold the panel
+        MultiWindowTextGUI gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(), new EmptySpace(TextColor.ANSI.BLUE));
 
+        // Create window to hold the panel
         BasicWindow window = new BasicWindow("Terminal Text");
         window.setHints(Arrays.asList(Window.Hint.FULL_SCREEN));
 
@@ -44,44 +45,43 @@ public static void main(String[] args) throws IOException {
                                                public void run(){
                                                        // Actions go here
                                                        // call the list drop down thing
+                                                       ActionListDialogs.fileDialog(gui);
                                                }
                                        });
         Button editButton = new Button("Edit", new Runnable(){
                                                @Override
                                                public void run(){
-                                                       // Actions go here
-                                                       // call the list drop down thing
+                                                       ActionListDialogs.editDialog(gui);
                                                }
                                        });
         Button viewButton = new Button("View", new Runnable(){
                                                @Override
                                                public void run(){
-                                                       // Actions go here
-                                                       // call the list drop down thing
+                                                       ActionListDialogs.viewDialog(gui);
                                                }
                                        });
         Button findButton = new Button("Find", new Runnable(){
                                                @Override
                                                public void run(){
-                                                       // Actions go here
-                                                       // call the list drop down thing
+                                                       ActionListDialogs.findDialog(gui);
                                                }
                                        });
         Button packagesileButton = new Button("Packages", new Runnable(){
                                                       @Override
                                                       public void run(){
-                                                              // Actions go here
-                                                              // call the list drop down thing
+                                                              ActionListDialogs.packagesDialog(gui);
                                                       }
                                               });
         Button helpButton = new Button("Help", new Runnable(){
                                                @Override
                                                public void run(){
-                                                       // Actions go here
-                                                       // call the list drop down thing
+                                                       ActionListDialogs.helpDialog(gui);
                                                }
                                        });
 
+
+
+        // add all components for the top Pannel
         topPanel.addComponent(fileButton);
         topPanel.addComponent(editButton);
         topPanel.addComponent(viewButton);
@@ -113,8 +113,7 @@ public static void main(String[] args) throws IOException {
 
 
 
-// Create gui and start gui
-        MultiWindowTextGUI gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(), new EmptySpace(TextColor.ANSI.BLUE));
+//start gui
         gui.addWindowAndWait(window);
 
 }
