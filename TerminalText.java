@@ -12,14 +12,18 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class TerminalText {
+public static Label lastSave;
+public static Label linesLabel;
+public static TextBox textBox =  new TextBox("", TextBox.Style.MULTI_LINE);;
 public static void main(String[] args) throws IOException {
+
 
         // Setup terminal and screen layers
         Terminal terminal = new DefaultTerminalFactory().createTerminal();
         Screen screen = new TerminalScreen(terminal);
         screen.startScreen();
 
-        MultiWindowTextGUI gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(), new EmptySpace(TextColor.ANSI.BLUE));
+        MultiWindowTextGUI gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(), new EmptySpace(TextColor.ANSI.BLACK));
 
         // Create window to hold the panel
         BasicWindow window = new BasicWindow("Terminal Text");
@@ -30,7 +34,7 @@ public static void main(String[] args) throws IOException {
 
 
         // Sets the textbox to be in the center of the screen
-        TextBox textBox = new TextBox("", TextBox.Style.MULTI_LINE);
+        //TextBox textBox = new TextBox("", TextBox.Style.MULTI_LINE);
         textBox.setLayoutData(BorderLayout.Location.CENTER);
         mainPanel.addComponent(textBox);
 
@@ -100,10 +104,12 @@ public static void main(String[] args) throws IOException {
         // Begin Bottom Pannel Stuff //
         Panel bottomPanel = new Panel();
         bottomPanel.setLayoutData(BorderLayout.Location.BOTTOM);
-        topPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
+        bottomPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
 
-        Label linesLabel = new Label("Lines: ");
+        linesLabel = new Label("");
+        lastSave = new Label("");
         bottomPanel.addComponent(linesLabel);
+        bottomPanel.addComponent(lastSave);
 
 
         mainPanel.addComponent(bottomPanel.withBorder(Borders.singleLine("")));

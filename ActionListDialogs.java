@@ -3,9 +3,16 @@ import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
 import com.googlecode.lanterna.gui2.dialogs.FileDialogBuilder;
 import com.googlecode.lanterna.TerminalSize;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.io.IOException;
 
 public class ActionListDialogs {
 //Create Action List Dialogs
+public static String currentOpenFileString;
+public static Path currentOpenFilePath;
+
 public static void fileDialog(MultiWindowTextGUI gui){
         new ActionListDialogBuilder()
         .setTitle("File")
@@ -18,29 +25,42 @@ public static void fileDialog(MultiWindowTextGUI gui){
         .addAction("Open File", new Runnable() {
                            @Override
                            public void run() {
-                                   File file = new FileDialogBuilder()
-                                               .setTitle("Open File")
-                                               .setDescription("Choose a file")
-                                               .setActionLabel("Open")
-                                               .setSuggestedSize(new TerminalSize(100,20))
-                                               .build()
-                                               .showDialog(gui);
-                                   String filePath = file.getPath();
-                                   System.out.println(filePath);
-                                   // use -> setText(String text)
-
+                                   File choosenFile = new FileDialogBuilder()
+                                                      .setTitle("Open File")
+                                                      .setDescription("Choose a file")
+                                                      .setActionLabel("Open")
+                                                      // user  getTerminalSize() and base the openfile size off the current terminal size.
+                                                      .setSuggestedSize(new TerminalSize(100,20))
+                                                      .build()
+                                                      .showDialog(gui);
+                                   // get path as a String
+                                   currentOpenFileString = choosenFile.getPath();
+                                   // gets path as a Path
+                                   currentOpenFilePath = choosenFile.toPath();
+                                   // read the file into the textBox
+                                   // This method is only approprate for smallish Files
+                                   try {
+                                           TerminalText.textBox.setText(new
+                                                                        String(Files.readAllBytes(Paths.get(currentOpenFileString))) );
+                                   } catch (IOException ioe) {
+                                           ioe.printStackTrace();
+                                   }
+                                   // update the lines Label
+                                   TerminalText.linesLabel.setText("Lines: " + String.valueOf( TerminalText.textBox.getLineCount()) + " || ");
                            }
                    })
         .addAction("Save", new Runnable() {
                            @Override
                            public void run() {
-                                   // Do 3rd thing...
-                                   // use -> getText()
+                                   WriteToFile.overwrite(currentOpenFileString);
+
                            }
                    })
         .addAction("Save As...", new Runnable() {
                            @Override
                            public void run() {
+
+                                   WriteToFile.overwrite("testfile.txt");
                                    // Do 3rd thing...
                            }
                    })
