@@ -10,67 +10,37 @@ import java.io.IOException;
 
 public class ActionListDialogs {
 //Create Action List Dialogs
-public static String currentOpenFileString;
-public static Path currentOpenFilePath;
-
 public static void fileDialog(MultiWindowTextGUI gui){
         new ActionListDialogBuilder()
         .setTitle("File")
         .addAction("New File", new Runnable() {
                            @Override
                            public void run() {
-                                   // Do 1st thing...
+                                   String filepath = Utils.askForFilePath(gui);
                            }
                    })
         .addAction("Open File", new Runnable() {
                            @Override
                            public void run() {
-                                   File choosenFile = new FileDialogBuilder()
-                                                      .setTitle("Open File")
-                                                      .setDescription("Choose a file")
-                                                      .setActionLabel("Open")
-                                                      // user  getTerminalSize() and base the openfile size off the current terminal size.
-                                                      .setSuggestedSize(new TerminalSize(100,20))
-                                                      .build()
-                                                      .showDialog(gui);
-                                   // get path as a String
-                                   currentOpenFileString = choosenFile.getPath();
-                                   // gets path as a Path
-                                   currentOpenFilePath = choosenFile.toPath();
-                                   // read the file into the textBox
-                                   // This method is only approprate for smallish Files
-                                   try {
-                                           TerminalText.textBox.setText(new
-                                                                        String(Files.readAllBytes(Paths.get(currentOpenFileString))) );
-                                   } catch (IOException ioe) {
-                                           ioe.printStackTrace();
-                                   }
-                                   // update the lines Label
-                                   TerminalText.linesLabel.setText("Lines: " + String.valueOf( TerminalText.textBox.getLineCount()) + " || ");
+                                   Utils.openFile(gui);
                            }
                    })
         .addAction("Save", new Runnable() {
                            @Override
                            public void run() {
-                                   WriteToFile.overwrite(currentOpenFileString);
-
+                                   WriteToFile.overwrite(Utils.currentOpenFileString);
                            }
                    })
         .addAction("Save As...", new Runnable() {
                            @Override
                            public void run() {
+                                   String filepath = Utils.askForFilePath(gui);
+                                   // this line was causeing a crash not totally sure why yet
+                                   //WriteToFile.overwrite(filepath);
 
-                                   WriteToFile.overwrite("testfile.txt");
-                                   // Do 3rd thing...
                            }
                    })
-        .addAction("Save All", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("Close File", new Runnable() {
+        .addAction("Save and Quit", new Runnable() {
                            @Override
                            public void run() {
                                    // Do 3rd thing...

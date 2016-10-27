@@ -97,9 +97,9 @@ public static void main(String[] args) throws IOException {
         // End Top Pannel Stuff //
 
 
-        Panel leftPanel = new Panel();
-        leftPanel.setLayoutData(BorderLayout.Location.LEFT);
-        mainPanel.addComponent(leftPanel.withBorder(Borders.singleLine("left")));
+        //Panel leftPanel = new Panel();
+        //leftPanel.setLayoutData(BorderLayout.Location.LEFT);
+        //mainPanel.addComponent(leftPanel.withBorder(Borders.singleLine("left")));
 
         // Begin Bottom Pannel Stuff //
         Panel bottomPanel = new Panel();
