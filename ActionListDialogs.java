@@ -16,7 +16,7 @@ public static void fileDialog(MultiWindowTextGUI gui){
         .addAction("New File", new Runnable() {
                            @Override
                            public void run() {
-                                   String filepath = Utils.askForFilePath(gui);
+                                   Utils.newFile(gui);
                            }
                    })
         .addAction("Open File", new Runnable() {
@@ -28,14 +28,14 @@ public static void fileDialog(MultiWindowTextGUI gui){
         .addAction("Save", new Runnable() {
                            @Override
                            public void run() {
-                                   WriteToFile.overwrite(Utils.currentOpenFileString);
+                                   Utils.overwrite(Utils.currentOpenFileString);
                            }
                    })
         .addAction("Save As...", new Runnable() {
                            @Override
                            public void run() {
-                                   String filepath = Utils.askForFilePath(gui);
-                                   // this line was causeing a crash not totally sure why yet
+                                   Utils.askForFilePath(gui);
+                                   // this line was causeing a crash not totally sure why yet, I should try this again though because ive changed alot for the askForFilePath
                                    //WriteToFile.overwrite(filepath);
 
                            }
