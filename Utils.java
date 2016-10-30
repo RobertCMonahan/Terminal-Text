@@ -19,7 +19,16 @@ public class Utils {
 public static String currentOpenFileString;
 public static Path currentOpenFilePath;
 
-public static String askForFilePath(MultiWindowTextGUI gui){
+private static File askForFilePath(MultiWindowTextGUI gui){
+        /**
+         * This method is used to prompt the user for a Filepath using
+         * a TextInputDialog. If only a file name is entered it uses
+         * the present working directory to complete the Filepath.
+         * the returned File is not checked for validity
+         *
+         * @param gui A MultiWindowTextGUI and is used to build the TextInputDialog
+         * @return File This returns whatever the user inputed as a File
+         */
 
         // get the present working directory
         String pwd = Paths.get(".").toAbsolutePath().normalize().toString();
@@ -30,75 +39,24 @@ public static String askForFilePath(MultiWindowTextGUI gui){
                        .setDescription("the present working directory is\n" + pwd)
                        .build()
                        .showDialog(gui);
-        if (input.equals("Close")) {
-                return "closed";
+
+        if (input.equals(1)) { //Cancel
+
+                return null;
         }
-        //check path for validity
-        File f = new File(input);
-        if (f.exists()) {
-                // Show dialog Warning of overwrite, this occurs when the file inputed alredy exists
-                MessageDialogButton buttonResponse = new MessageDialogBuilder()
-                                                     .setTitle("Warning")
-                                                     .setText("Would you like to overwrite " + input)
-                                                     .addButton(MessageDialogButton.No)
-                                                     .addButton(MessageDialogButton.Yes)
-                                                     .build()
-                                                     .showDialog(gui);
-
-                String warningInput = buttonResponse.toString();
-
-                if (warningInput.equals("Yes")) {
-                        System.out.println("Yes");
-                        // user chose to overwrite. use f path to overwrite
-                        // overwrite(f.getPath());
-                        currentOpenFileString = f.getPath();
-                        currentOpenFilePath = f.toPath();
-                        return "overwrite";
-
-                } else {
-                        // user chose NOT to overwrite. start over
-                        System.out.println("No");
-                        askForFilePath(gui);
-                }
-
-
-        } else {
-                // if no file exists attempt to create the file
-                try {
-                        f.createNewFile();
-                        currentOpenFileString = f.getPath();
-                        currentOpenFilePath = f.toPath();
-                        loadFileIntoEditor(gui);
-                        return "new";
-                } catch (IOException ioe) {
-                        //catch exception when path is invalid
-                        // if Retry reopen the askForFilePath
-                        // else close the dialog
-                        MessageDialogButton buttonResponse = new MessageDialogBuilder()
-                                                             .setTitle("Error")
-                                                             .setText(input + " is not a valid path or filename")
-                                                             .addButton(MessageDialogButton.Retry)
-                                                             .addButton(MessageDialogButton.Close)
-                                                             .build()
-                                                             .showDialog(gui);
-
-                        String invalidPathErrorInput = buttonResponse.toString();
-
-                        if (invalidPathErrorInput.equals("Retry")) {
-                                System.out.println("Retry");
-                                askForFilePath(gui);
-                        } else {
-                                System.out.println("Close");
-                                return "closed";
-                                // exit dialog
-                        }
-                }
-        }
-
-        return "closed";
+        return new File(input);
 }
 
+
 public static void overwrite(String filePath) {
+        /**
+         * This method is used to overwrite a file using the text
+         * in the textBox.
+         *
+         * This method also updates the line count & last saved timestamp.
+         *
+         * @param filePath This is the filepath to be overwriten
+         */
         File file = new File(filePath);
         String source =  TerminalText.textBox.getText();
         FileWriter fw;
@@ -119,6 +77,14 @@ public static void overwrite(String filePath) {
 }
 
 public static void openFile(MultiWindowTextGUI gui){
+        /**
+         * This method is used to open a file and loads it into the textBox
+         * using the loadFileIntoEditor method. openFile builds a FileDialog
+         * the prompts the user to choose a file to open. The Choosen file is
+         * used to alter the currentOpenFile (path & string).
+         *
+         * @param gui A MultiWindowTextGUI and is used to build the FileDialogBuilder
+         */
         File choosenFile = new FileDialogBuilder()
                            .setTitle("Open File")
                            .setDescription("Choose a file")
@@ -132,32 +98,151 @@ public static void openFile(MultiWindowTextGUI gui){
 // gets path as a Path
         currentOpenFilePath = choosenFile.toPath();
 
-        loadFileIntoEditor(gui);
+        loadFileIntoEditor();
 
 }
 
-public static void newFile(MultiWindowTextGUI gui){
+private static boolean overwriteWarning(MultiWindowTextGUI gui, File f){
+        /**
+         * This method opens a error dialog stating the users file path was invalid
+         *
+         * @param gui A MultiWindowTextGUI and is used to build the dialog
+         * @param f Is a filepath that is used in the text so the user can
+         * see what their input was.
+         * @return boolean If the user selects yes (wants to overwrite)
+         * true is returned. And false if no is selected.
+         */
+        MessageDialogButton buttonResponse = new MessageDialogBuilder()
+                                             .setTitle("Warning")
+                                             .setText("Would you like to overwrite " + f )
+                                             .addButton(MessageDialogButton.No)
+                                             .addButton(MessageDialogButton.Yes)
+                                             .build()
+                                             .showDialog(gui);
+
+        String warningInput = buttonResponse.toString();
+
+        if (warningInput.equals("Yes")) {
+                // user wants to overwrite file
+                return true;
+        }
+        // user dosent want to overwrite
+        return false;
+}
+
+private static boolean invalidPathError(MultiWindowTextGUI gui, File f){
+        /**
+         * This method opens a error dialog stating the users file path was invalid
+         *
+         * @param gui A MultiWindowTextGUI and is used to build the dialog
+         * @param f Is a filepath that is used in the text so the user can
+         * see what their input was.
+         * @return boolean If the user selects retry (entering a filepath)
+         * true is returned. And false if close is selected.
+         */
+        MessageDialogButton buttonResponse = new MessageDialogBuilder()
+                                             .setTitle("Error")
+                                             .setText(f + " is not a valid path or filename")
+                                             .addButton(MessageDialogButton.Retry)
+                                             .addButton(MessageDialogButton.Close)
+                                             .build()
+                                             .showDialog(gui);
+
+        String invalidPathErrorInput = buttonResponse.toString();
+
+        if (invalidPathErrorInput.equals("Retry")) {
+                // user chose to retry
+                return true;
+        }
+        // user chose to close dialog
+        return false;
+}
+
+
+public static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
+        /**
+         * This method is used to create a new file or save as a file
+         *
+         * The user is asked for a file path for the file they want to
+         * create/save as. Then the path is checked to see if it already
+         * exists, if it does then a overwrite Warning is called, and the
+         * user can decide if they want to overwrite the existing file.
+         * Then the path is checked to ensure it is a valid path, if the
+         * path is valid the file is created and saved to. If it is not
+         * valid the path the user is prompted for a new path.
+         *
+         * @param gui A MultiWindowTextGUI and is used to build various gui elements
+         * @param newOrSaveAs is used to determine if the user wants to create
+         * a new file or save existing work as a certin file name. It changes a
+         * few minor but important steps.
+         */
+
         // called from the newFile in ActionListDialogs
-        String response = askForFilePath(gui);
+        File file = askForFilePath(gui);
+        /* if a file path is entered (null = canceling)
+         * there dosent seem to be a way to click cancel without it aborting the editor.
+         * I think it's a problem with laterna. I'll need to look into it further but
+         * it seems like theres no way to get the data that the user hit ok or cancel
+         * the response seems to be if ok is pressed continue, if cancel is pressed abort.
+         */
+        if (file != null) {
+                // test if file exists
+                if (file.exists()) {
+                        // if file exists popup the overwriteWarning
+                        boolean overwrite = overwriteWarning(gui, file);
+                        if (overwrite == true) { // user wants to overwrite file
+                                currentOpenFileString = file.getPath();
+                                currentOpenFilePath = file.toPath();
+                                if (newOrSaveAs.equals("new")) {
+                                        // empty textBox
+                                        TerminalText.textBox.setText("");
+                                }
+                                // overwrite the current file with the empty one.
+                                overwrite(currentOpenFileString);
+                        } else { // user dosent want to overwrite
+                                 // start over
+                                newSaveAs(gui, newOrSaveAs);
+                        }
+                } else {
+                        try {
+                                file.createNewFile();
+                                currentOpenFileString = file.getPath();
+                                currentOpenFilePath = file.toPath();
+                                if (newOrSaveAs.equals("new")) {
+                                        loadFileIntoEditor();
+                                } else {
+                                        overwrite(currentOpenFileString);
+                                }
 
-        if (response.equals("overwrite")) {
-                // load in empty String
-                TerminalText.textBox.setText(new String(""));
-                // update the lines Label
-                updateLineCount();
-                updateSavedTimeStamp();
+                        } catch (IOException ioe) {
+                                //catch exception when path is invalid
+                                // call invalidPath Dialogs
+                                boolean retry = invalidPathError(gui, file);
+                                if (retry == true) {
+                                        newSaveAs(gui, newOrSaveAs);
+                                }
+                        }
 
-        } else if (response.equals("new")) {
 
-        } else {
+                }
 
         }
-
 }
 
 
+private static void loadFileIntoEditor(){
+        /**
+         * This method is used to load a file into the textBox by
+         * reading the file into a string and then setting the
+         * textBox as the string.
+         *
+         * The major flaw is that then entire file is stored in memory
+         * before it's loaded into the textBox so this will not work
+         * with files to large to store in memory.
+         *
+         * This method also updates the line count & last saved timestamp.
+         */
 
-private static void loadFileIntoEditor(MultiWindowTextGUI gui){
         // read the file into the textBox
         // This method is only approprate for smallish Files
         try {
@@ -173,11 +258,19 @@ private static void loadFileIntoEditor(MultiWindowTextGUI gui){
 }
 
 private static void updateLineCount() {
+        /**
+         * This method counts the lines in the editor and updates
+         * TerminalText.linesLabel with the current count
+         */
         String lineCount = String.valueOf( TerminalText.textBox.getLineCount());
         TerminalText.linesLabel.setText("Lines: " + lineCount + " || ");
 }
 
 private static void updateSavedTimeStamp() {
+        /**
+         * This method gets the current time HH:mm and updates
+         * TerminalText.lastSave with the current time
+         */
         // get the current hour and minute
         String timeStamp = new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime());
         // get the filename from the currentOpenFilePath
