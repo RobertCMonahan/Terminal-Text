@@ -40,11 +40,12 @@ private static File askForFilePath(MultiWindowTextGUI gui){
                        .build()
                        .showDialog(gui);
 
-        if (input.equals(1)) { //Cancel
-
-                return null;
+        // when cancel is not selected (cancel == null)
+        if (input != null) {
+                return new File(input);
         }
-        return new File(input);
+        return null;
+
 }
 
 
@@ -93,14 +94,77 @@ public static void openFile(MultiWindowTextGUI gui){
                            .setSuggestedSize(new TerminalSize(100,20))
                            .build()
                            .showDialog(gui);
-// get path as a String
-        currentOpenFileString = choosenFile.getPath();
-// gets path as a Path
-        currentOpenFilePath = choosenFile.toPath();
 
-        loadFileIntoEditor();
+
+        // when cancel is not selected (cancel == null)
+        if (choosenFile != null) {
+                // get path as a String
+                currentOpenFileString = choosenFile.getPath();
+                // gets path as a Path
+                currentOpenFilePath = choosenFile.toPath();
+
+                loadFileIntoEditor();
+        } else {
+                // when cancel is selected do nothing
+                // laterna automaticlly closes the dialog
+        }
+
+
+
+
+
 
 }
+
+private static void loadFileIntoEditor(){
+        /**
+         * This method is used to load a file into the textBox by
+         * reading the file into a string and then setting the
+         * textBox as the string.
+         *
+         * The major flaw is that then entire file is stored in memory
+         * before it's loaded into the textBox so this will not work
+         * with files to large to store in memory.
+         *
+         * This method also updates the line count & last saved timestamp.
+         */
+
+        // read the file into the textBox
+        // This method is only approprate for smallish Files
+        try {
+                TerminalText.textBox.setText(new
+                                             String(Files.readAllBytes(Paths.get(currentOpenFileString))) );
+        } catch (IOException ioe) {
+                ioe.printStackTrace();
+        }
+        // update the lines Label
+        updateLineCount();
+        updateSavedTimeStamp();
+
+}
+
+private static void updateLineCount() {
+        /**
+         * This method counts the lines in the editor and updates
+         * TerminalText.linesLabel with the current count
+         */
+        String lineCount = String.valueOf( TerminalText.textBox.getLineCount());
+        TerminalText.linesLabel.setText("Lines: " + lineCount + " || ");
+}
+
+private static void updateSavedTimeStamp() {
+        /**
+         * This method gets the current time HH:mm and updates
+         * TerminalText.lastSave with the current time
+         */
+        // get the current hour and minute
+        String timeStamp = new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime());
+        // get the filename from the currentOpenFilePath
+        String filename = currentOpenFilePath.getFileName().toString();
+        // Concatinate everything
+        TerminalText.lastSave.setText( filename +" last saved at "+ timeStamp +" || ");
+}
+
 
 private static boolean overwriteWarning(MultiWindowTextGUI gui, File f){
         /**
@@ -230,54 +294,9 @@ public static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
 }
 
 
-private static void loadFileIntoEditor(){
-        /**
-         * This method is used to load a file into the textBox by
-         * reading the file into a string and then setting the
-         * textBox as the string.
-         *
-         * The major flaw is that then entire file is stored in memory
-         * before it's loaded into the textBox so this will not work
-         * with files to large to store in memory.
-         *
-         * This method also updates the line count & last saved timestamp.
-         */
 
-        // read the file into the textBox
-        // This method is only approprate for smallish Files
-        try {
-                TerminalText.textBox.setText(new
-                                             String(Files.readAllBytes(Paths.get(currentOpenFileString))) );
-        } catch (IOException ioe) {
-                ioe.printStackTrace();
-        }
-        // update the lines Label
-        updateLineCount();
-        updateSavedTimeStamp();
 
-}
 
-private static void updateLineCount() {
-        /**
-         * This method counts the lines in the editor and updates
-         * TerminalText.linesLabel with the current count
-         */
-        String lineCount = String.valueOf( TerminalText.textBox.getLineCount());
-        TerminalText.linesLabel.setText("Lines: " + lineCount + " || ");
-}
-
-private static void updateSavedTimeStamp() {
-        /**
-         * This method gets the current time HH:mm and updates
-         * TerminalText.lastSave with the current time
-         */
-        // get the current hour and minute
-        String timeStamp = new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime());
-        // get the filename from the currentOpenFilePath
-        String filename = currentOpenFilePath.getFileName().toString();
-        // Concatinate everything
-        TerminalText.lastSave.setText( filename +" last saved at "+ timeStamp +" || ");
-}
 
 
 
