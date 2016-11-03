@@ -10,6 +10,20 @@ import java.io.IOException;
 
 public class ActionListDialogs {
 //Create Action List Dialogs
+
+/**
+ * This method builds the ActionListDialogBuilder, or the dropdown menu for
+ * for the "File" button and includes the following buttons/actions
+ * New File
+ * Open File
+ * Save
+ * Save As...
+ * Save and Quit
+ * Quit
+ *
+ * @param gui A MultiWindowTextGUI and is used for various GUI elements
+ * including but not limited to the dropdown menu itself
+ */
 public static void fileDialog(MultiWindowTextGUI gui){
         new ActionListDialogBuilder()
         .setTitle("File")
@@ -43,13 +57,14 @@ public static void fileDialog(MultiWindowTextGUI gui){
         .addAction("Save and Quit", new Runnable() {
                            @Override
                            public void run() {
-                                   // Do 3rd thing...
+                                   Utils.overwrite(Utils.currentOpenFileString);
+                                   TerminalText.shutdown();
                            }
                    })
         .addAction("Quit", new Runnable() {
                            @Override
                            public void run() {
-                                   // Do 3rd thing...
+                                   TerminalText.shutdown();
                            }
                    })
         .build()
@@ -57,211 +72,17 @@ public static void fileDialog(MultiWindowTextGUI gui){
 }
 
 
-
-public static void editDialog(MultiWindowTextGUI gui){
-        new ActionListDialogBuilder()
-        .setTitle("Edit")
-        .addAction("Undo", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 1st thing...
-                           }
-                   })
-        .addAction("Redo", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 2nd thing...
-                           }
-                   })
-        .addAction("Cut", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("Copy", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("Paste", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("Select All", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("Preferences", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .build()
-        .showDialog(gui);
-}
-
-
-
-public static void viewDialog(MultiWindowTextGUI gui){
-        new ActionListDialogBuilder()
-        .setTitle("View")
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 1st thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 2nd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .build()
-        .showDialog(gui);
-}
-
-
-
-public static void findDialog(MultiWindowTextGUI gui){
-        new ActionListDialogBuilder()
-        .setTitle("Find")
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 1st thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 2nd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .build()
-        .showDialog(gui);
-}
-
-
-
-public static void packagesDialog(MultiWindowTextGUI gui){
-        new ActionListDialogBuilder()
-        .setTitle("Packages")
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 1st thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 2nd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .build()
-        .showDialog(gui);
-}
-
-
-
+/**
+ * This method builds the ActionListDialogBuilder, or the dropdown menu for
+ * for the "Help" button and includes the following buttons/actions
+ * View Terms Of Use
+ * View Licence
+ * FAQ
+ * About Terminal Text
+ *
+ * @param gui A MultiWindowTextGUI and is used for various GUI elements
+ * including but not limited to the dropdown menu itself
+ */
 public static void helpDialog(MultiWindowTextGUI gui){
         new ActionListDialogBuilder()
         .setTitle("Help")
@@ -284,24 +105,6 @@ public static void helpDialog(MultiWindowTextGUI gui){
                            }
                    })
         .addAction("About Terminal Text", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
-                           @Override
-                           public void run() {
-                                   // Do 3rd thing...
-                           }
-                   })
-        .addAction("?", new Runnable() {
                            @Override
                            public void run() {
                                    // Do 3rd thing...

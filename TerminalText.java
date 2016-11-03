@@ -12,21 +12,27 @@ import java.io.IOException;
 import java.util.Arrays;
 
 public class TerminalText {
+
 public static Label lastSave;
 public static Label linesLabel;
 public static TextBox textBox =  new TextBox("", TextBox.Style.MULTI_LINE);;
+
+private static Screen screen;
+private static Terminal terminal;
+private static BasicWindow window;
+
 public static void main(String[] args) throws IOException {
 
 
         // Setup terminal and screen layers
-        Terminal terminal = new DefaultTerminalFactory().createTerminal();
-        Screen screen = new TerminalScreen(terminal);
+        terminal = new DefaultTerminalFactory().createTerminal();
+        screen = new TerminalScreen(terminal);
         screen.startScreen();
 
         MultiWindowTextGUI gui = new MultiWindowTextGUI(screen, new DefaultWindowManager(), new EmptySpace(TextColor.ANSI.BLACK));
 
         // Create window to hold the panel
-        BasicWindow window = new BasicWindow("Terminal Text");
+        window = new BasicWindow("Terminal Text");
         window.setHints(Arrays.asList(Window.Hint.FULL_SCREEN));
 
         Panel mainPanel = new Panel();
@@ -52,30 +58,7 @@ public static void main(String[] args) throws IOException {
                                                        ActionListDialogs.fileDialog(gui);
                                                }
                                        });
-        Button editButton = new Button("Edit", new Runnable(){
-                                               @Override
-                                               public void run(){
-                                                       ActionListDialogs.editDialog(gui);
-                                               }
-                                       });
-        Button viewButton = new Button("View", new Runnable(){
-                                               @Override
-                                               public void run(){
-                                                       ActionListDialogs.viewDialog(gui);
-                                               }
-                                       });
-        Button findButton = new Button("Find", new Runnable(){
-                                               @Override
-                                               public void run(){
-                                                       ActionListDialogs.findDialog(gui);
-                                               }
-                                       });
-        Button packagesileButton = new Button("Packages", new Runnable(){
-                                                      @Override
-                                                      public void run(){
-                                                              ActionListDialogs.packagesDialog(gui);
-                                                      }
-                                              });
+
         Button helpButton = new Button("Help", new Runnable(){
                                                @Override
                                                public void run(){
@@ -87,10 +70,6 @@ public static void main(String[] args) throws IOException {
 
         // add all components for the top Pannel
         topPanel.addComponent(fileButton);
-        topPanel.addComponent(editButton);
-        topPanel.addComponent(viewButton);
-        topPanel.addComponent(findButton);
-        topPanel.addComponent(packagesileButton);
         topPanel.addComponent(helpButton);
 
         mainPanel.addComponent(topPanel.withBorder(Borders.singleLine()));
@@ -122,5 +101,23 @@ public static void main(String[] args) throws IOException {
 //start gui
         gui.addWindowAndWait(window);
 
+}
+
+
+/**
+ * This method shuts down laterna and the text editor
+ */
+public static void shutdown(){
+        window.close();
+        /* not sure if these are nesscery but others used
+         * this to show down laterna, but they cause an
+         * IOException everytime saying I cant call
+         * exitPrivateMode() when not in private mode.
+         *
+         * screen.stopScreen();
+         * terminal.exitPrivateMode();
+         *
+         */
+        System.exit(0);
 }
 }
