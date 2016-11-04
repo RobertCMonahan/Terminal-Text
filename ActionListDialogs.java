@@ -57,6 +57,8 @@ public static void fileDialog(MultiWindowTextGUI gui){
         .addAction("Save and Quit", new Runnable() {
                            @Override
                            public void run() {
+
+                                   // needs to check in its a new file or not so it can ask for a file path to save to
                                    Utils.overwrite(Utils.currentOpenFileString);
                                    TerminalText.shutdown();
                            }

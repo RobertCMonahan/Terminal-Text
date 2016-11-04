@@ -13,8 +13,9 @@ import java.util.Arrays;
 
 public class TerminalText {
 
-public static Label lastSave;
+public static Label lastSaveLabel;
 public static Label linesLabel;
+public static Label fileTypeLabel;
 public static TextBox textBox =  new TextBox("", TextBox.Style.MULTI_LINE);;
 
 private static Screen screen;
@@ -86,9 +87,11 @@ public static void main(String[] args) throws IOException {
         bottomPanel.setLayoutManager(new LinearLayout(Direction.HORIZONTAL));
 
         linesLabel = new Label("");
-        lastSave = new Label("");
+        lastSaveLabel = new Label("");
+        fileTypeLabel = new Label("");
         bottomPanel.addComponent(linesLabel);
-        bottomPanel.addComponent(lastSave);
+        bottomPanel.addComponent(lastSaveLabel);
+        bottomPanel.addComponent(fileTypeLabel);
 
 
         mainPanel.addComponent(bottomPanel.withBorder(Borders.singleLine("")));

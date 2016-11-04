@@ -69,6 +69,7 @@ public static void overwrite(String filePath) {
                 updateSavedTimeStamp();
                 // update the lines Label
                 updateLineCount();
+                setFileTypeIntoInfoBar(currentOpenFileString);
 
         } catch (IOException ioe) {
                 ioe.printStackTrace();
@@ -132,6 +133,7 @@ private static void loadFileIntoEditor(){
         // update the lines Label
         updateLineCount();
         updateSavedTimeStamp();
+        setFileTypeIntoInfoBar(currentOpenFileString);
 
 }
 
@@ -141,7 +143,7 @@ private static void loadFileIntoEditor(){
  */
 private static void updateLineCount() {
         String lineCount = String.valueOf( TerminalText.textBox.getLineCount());
-        TerminalText.linesLabel.setText("Lines: " + lineCount + " || ");
+        TerminalText.linesLabel.setText("Lines: " + lineCount + "  || ");
 }
 
 /**
@@ -154,7 +156,7 @@ private static void updateSavedTimeStamp() {
         // get the filename from the currentOpenFilePath
         String filename = currentOpenFilePath.getFileName().toString();
         // Concatinate everything
-        TerminalText.lastSave.setText( filename +" last saved at "+ timeStamp +" || ");
+        TerminalText.lastSaveLabel.setText( filename +" last saved at "+ timeStamp +" || ");
 }
 
 /**
@@ -274,9 +276,8 @@ public static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
  * Under the title "Determining File Types in Java," and is licensed under
  * a Creative Commons Attribution 4.0 International License.
  *
- * This code and blog post can found in it's entirety, at URL below.
+ * This code and blog post can found in it's entirety, at the URL below.
  * https://marxsoftware.blogspot.com/2015/02/determining-file-types-in-java.html
- *
  */
 
 /**
@@ -286,7 +287,7 @@ public static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
  * @param fileName Name of file whose type is desired.
  * @return String representing identified type of file with provided name.
  */
-public String identifyFileTypeUsingFilesProbeContentType(final String fileName)
+public static String identifyFileTypeUsingFilesProbeContentType(String fileName)
 
 {
         String fileType = "Undetermined";
@@ -304,7 +305,15 @@ public String identifyFileTypeUsingFilesProbeContentType(final String fileName)
         return fileType;
 }
 
-public static void setFileTypeIntoInfoBar(){
+/**
+ * Identify file type of file with provided path and name
+ * and display the file type in the bottomPanel
+ *
+ * @param fileName Name of file whose type is desired.
+ */
+public static void setFileTypeIntoInfoBar(String fileName){
+        String fileType = identifyFileTypeUsingFilesProbeContentType(fileName);
+        TerminalText.fileTypeLabel.setText( fileType +"  || ");
 
 
 
