@@ -1,0 +1,20 @@
+
+  Terminal Text is a simple text editor that can be
+launched inside a terminal window. Terminal Text
+is a Laterna based GUI and can be used in any
+terminal environment. There is limited functionality
+in Terminal Text, you can open and save files with
+only a few other minor features. There are two
+reasons for this; One, this was primarily a learning
+experience for myself and was never intended to be
+widely used. Two, Laterna is has limited functionality
+and there are other restrictions to adding
+functionality for a terminal environment which cannot
+be easily overcome by a single junior programmer such
+as myself in any reasonable amount of time.
+
+Terminal Text was built by Robert C. Monahan. In
+November 2016.
+
+Learn more about Terminal Text by going to
+https://github.com/RobertCMonahan/Terminal_Text
