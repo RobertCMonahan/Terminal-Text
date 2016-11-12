@@ -13,6 +13,8 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.regex.Pattern;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Utils {
 
@@ -289,6 +291,7 @@ public static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
 }
 
 
+
 /*
  * identifyFileTypeUsingFilesProbeContentType was written in the "Inspired
  * by Actual Events" blog by Dustin Marx, on Wednesday, February 18, 2015.
@@ -306,9 +309,9 @@ public static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
  * @param fileName Name of file whose type is desired.
  * @return String representing identified type of file with provided name.
  */
-private static String identifyFileTypeUsingFilesProbeContentType(String fileName)
+private static String identifyFileTypeUsingFilesProbeContentType(String fileName){
 
-{
+
         String fileType = "Undetermined";
         final File file = new File(fileName);
         try
@@ -321,6 +324,7 @@ private static String identifyFileTypeUsingFilesProbeContentType(String fileName
                         "ERROR: Unable to determine file type for " + fileName
                         + " due to exception " + ioException);
         }
+
         return fileType;
 }
 
@@ -330,9 +334,34 @@ private static String identifyFileTypeUsingFilesProbeContentType(String fileName
  *
  * @param fileName Name of file whose type is desired.
  */
-public static void setFileTypeIntoInfoBar(String fileName){
-        String fileType = identifyFileTypeUsingFilesProbeContentType(fileName);
-        TerminalText.fileTypeLabel.setText( fileType +"  || ");
+//@SuppressWarnings("unchecked")
+public static void setFileTypeIntoInfoBar(String fileType){
+        String fileTypeStr = identifyFileTypeUsingFilesProbeContentType(fileType);
+
+        HashMap<String, String> hmap = new HashMap<String, String>();
+        // Put elements to the map
+        hmap.put("text/plain", "Plain Text");
+        hmap.put("text/markdown", "Github Markdown");
+        hmap.put("text/x-java", "Java");
+        hmap.put("text/x-python", "Python");
+        hmap.put("text/html", "HTML");
+        hmap.put("text/xml", "XML");
+        hmap.put("application/pdf", "PDF");
+        hmap.put("application/x-java-archive", "Java Archive");
+        hmap.put("application/x-shellscript", "Shell Script");
+        hmap.put("application/javascript", "Javascript");
+
+        // convert to more readable format
+        String fileTypeReformated = hmap.get(fileTypeStr);
+
+        if (fileTypeReformated == null) {
+                // if the file type isn't found in the HashMap use the non formated file type
+                TerminalText.fileTypeLabel.setText( fileTypeStr +"  || ");
+        } else {
+                TerminalText.fileTypeLabel.setText( fileTypeReformated +"  || ");
+        }
+
+
 }
 
 /**
@@ -344,7 +373,7 @@ protected static void displayLicense(MultiWindowTextGUI gui){
         try {
                 MessageDialogButton buttonResponse = new MessageDialogBuilder()
                                                      .setTitle("Terminal Text License")
-                                                     .setText(new String(Files.readAllBytes(Paths.get("../LICENSE"))))
+                                                     .setText(new String(Files.readAllBytes(Paths.get("LICENSE"))))
                                                      .addButton(MessageDialogButton.Close)
                                                      .build()
                                                      .showDialog(gui);
