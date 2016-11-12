@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
 
 public class Utils {
 
-protected static String currentOpenFileString;
-protected static Path currentOpenFilePath;
+public static String currentOpenFileString;
+public static Path currentOpenFilePath;
 
 /**
  * This method is used to prompt the user for a Filepath using
@@ -55,10 +55,15 @@ private static File askForFilePath(MultiWindowTextGUI gui){
  *
  * @param filePath This is the filepath to be overwriten
  */
-protected static void overwrite(String filePath) {
+public static void overwrite(String filePath, boolean useTextBox) {
         File file = new File(filePath);
-        String source =  TerminalText.textBox.getText();
+        String source;
         FileWriter fw;
+        if (useTextBox == true) {
+                source = TerminalText.textBox.getText();
+        } else {
+                source = "";
+        }
 
         try{
                 fw = new FileWriter(file, false); // load file into the FileWriter and set to overwrite (true for the 2nd arg set the FileWriter to append to the document)
@@ -85,7 +90,7 @@ protected static void overwrite(String filePath) {
  *
  * @param gui A MultiWindowTextGUI and is used to build the FileDialogBuilder
  */
-protected static void openFile(MultiWindowTextGUI gui){
+public static void openFile(MultiWindowTextGUI gui){
         File choosenFile = new FileDialogBuilder()
                            .setTitle("Open File")
                            .setDescription("Choose a file")
@@ -231,7 +236,7 @@ private static boolean invalidPathError(MultiWindowTextGUI gui, File f){
  * a new file or save existing work as a certin file name. It changes a
  * few minor but important steps.
  */
-protected static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
+public static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
         // called from the newFile in ActionListDialogs
         File file = askForFilePath(gui);
         if (file != null) {
@@ -239,36 +244,50 @@ protected static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
                 if (file.exists()) {
                         // if file exists popup the overwriteWarning
                         boolean overwrite = overwriteWarning(gui, file);
-                        if (overwrite == true) { // user wants to overwrite file
+                        if (overwrite == true) {
+                                // user wants to overwrite file
                                 currentOpenFileString = file.getPath();
                                 currentOpenFilePath = file.toPath();
                                 if (newOrSaveAs.equals("new")) {
-                                } else { // user dosent want to overwrite
-                                         // start over
-                                        newSaveAs(gui, newOrSaveAs);
+                                        // empty file
+                                        overwrite(currentOpenFileString, false);
+                                } else {
+                                        // saveas
+                                        overwrite(currentOpenFileString, true);
                                 }
+
                         } else {
-                                try {
-                                        file.createNewFile();
-                                        currentOpenFileString = file.getPath();
-                                        currentOpenFilePath = file.toPath();
-                                        if (newOrSaveAs.equals("new")) {
-                                                loadFileIntoEditor();
-                                        } else {
-                                                overwrite(currentOpenFileString);
-                                        }
-                                } catch (IOException ioe) {
-                                        //catch exception when path is invalid
-                                        // call invalidPath Dialogs
-                                        boolean retry = invalidPathError(gui, file);
-                                        if (retry == true) {
-                                                newSaveAs(gui, newOrSaveAs);
-                                        }
+                                // user dosent want to overwrite
+                                // start over
+                                newSaveAs(gui, newOrSaveAs);
+                        }
+                } else {
+                        // file dosent exist
+                        try {
+                                file.createNewFile();
+                                currentOpenFileString = file.getPath();
+                                currentOpenFilePath = file.toPath();
+                                if (newOrSaveAs.equals("new")) {
+                                        // load a blank file into the editor
+                                        loadFileIntoEditor();
+                                } else {
+                                        // if saveas
+                                        // overwrite using the text in the editor
+                                        overwrite(currentOpenFileString, true);
+                                }
+                        } catch (IOException ioe) {
+                                System.out.println("IOException");
+                                //catch exception when path is invalid
+                                // call invalidPath Dialogs
+                                boolean retry = invalidPathError(gui, file);
+                                if (retry == true) {
+                                        newSaveAs(gui, newOrSaveAs);
                                 }
                         }
                 }
         }
 }
+
 
 /*
  * identifyFileTypeUsingFilesProbeContentType was written in the "Inspired
@@ -311,7 +330,7 @@ private static String identifyFileTypeUsingFilesProbeContentType(String fileName
  *
  * @param fileName Name of file whose type is desired.
  */
-protected static void setFileTypeIntoInfoBar(String fileName){
+public static void setFileTypeIntoInfoBar(String fileName){
         String fileType = identifyFileTypeUsingFilesProbeContentType(fileName);
         TerminalText.fileTypeLabel.setText( fileType +"  || ");
 }

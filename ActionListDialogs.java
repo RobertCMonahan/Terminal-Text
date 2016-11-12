@@ -24,7 +24,7 @@ public class ActionListDialogs {
  * @param gui A MultiWindowTextGUI and is used for various GUI elements
  * including but not limited to the dropdown menu itself
  */
-protected static void fileDialog(MultiWindowTextGUI gui){
+public static void fileDialog(MultiWindowTextGUI gui){
         new ActionListDialogBuilder()
         .setTitle("File")
         .addAction("New File", new Runnable() {
@@ -42,7 +42,7 @@ protected static void fileDialog(MultiWindowTextGUI gui){
         .addAction("Save", new Runnable() {
                            @Override
                            public void run() {
-                                   Utils.overwrite(Utils.currentOpenFileString);
+                                   Utils.overwrite(Utils.currentOpenFileString, true);
                            }
                    })
         .addAction("Save As...", new Runnable() {
@@ -59,7 +59,7 @@ protected static void fileDialog(MultiWindowTextGUI gui){
                            public void run() {
 
                                    // needs to check in its a new file or not so it can ask for a file path to save to
-                                   Utils.overwrite(Utils.currentOpenFileString);
+                                   Utils.overwrite(Utils.currentOpenFileString, true);
                                    TerminalText.shutdown();
                            }
                    })
@@ -85,7 +85,7 @@ protected static void fileDialog(MultiWindowTextGUI gui){
  * @param gui A MultiWindowTextGUI and is used for various GUI elements
  * including but not limited to the dropdown menu itself
  */
-protected static void helpDialog(MultiWindowTextGUI gui){
+public static void helpDialog(MultiWindowTextGUI gui){
         new ActionListDialogBuilder()
         .setTitle("Help")
         .addAction("View Licence", new Runnable() {
