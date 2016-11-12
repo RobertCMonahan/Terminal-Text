@@ -13,18 +13,22 @@ import java.util.Arrays;
 
 public class TerminalText {
 
-public static Label lastSaveLabel;
-public static Label linesLabel;
-public static Label fileTypeLabel;
-public static TextBox textBox =  new TextBox("", TextBox.Style.MULTI_LINE);;
+protected static Label lastSaveLabel;
+protected static Label linesLabel;
+protected static Label fileTypeLabel;
+protected static TextBox textBox =  new TextBox("", TextBox.Style.MULTI_LINE);;
 
 private static Screen screen;
 private static Terminal terminal;
 private static BasicWindow window;
 
+/**
+ * The main method handles building the gui and setting up the window.
+ * It also adds a number of components that will always be displayed
+ * such as the top buttons and the bottom info bar.
+ *
+ */
 public static void main(String[] args) throws IOException {
-
-
         // Setup terminal and screen layers
         terminal = new DefaultTerminalFactory().createTerminal();
         screen = new TerminalScreen(terminal);

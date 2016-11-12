@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
 
 public class Utils {
 
-public static String currentOpenFileString;
-public static Path currentOpenFilePath;
+protected static String currentOpenFileString;
+protected static Path currentOpenFilePath;
 
 /**
  * This method is used to prompt the user for a Filepath using
@@ -55,7 +55,7 @@ private static File askForFilePath(MultiWindowTextGUI gui){
  *
  * @param filePath This is the filepath to be overwriten
  */
-public static void overwrite(String filePath) {
+protected static void overwrite(String filePath) {
         File file = new File(filePath);
         String source =  TerminalText.textBox.getText();
         FileWriter fw;
@@ -85,7 +85,7 @@ public static void overwrite(String filePath) {
  *
  * @param gui A MultiWindowTextGUI and is used to build the FileDialogBuilder
  */
-public static void openFile(MultiWindowTextGUI gui){
+protected static void openFile(MultiWindowTextGUI gui){
         File choosenFile = new FileDialogBuilder()
                            .setTitle("Open File")
                            .setDescription("Choose a file")
@@ -231,7 +231,7 @@ private static boolean invalidPathError(MultiWindowTextGUI gui, File f){
  * a new file or save existing work as a certin file name. It changes a
  * few minor but important steps.
  */
-public static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
+protected static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
         // called from the newFile in ActionListDialogs
         File file = askForFilePath(gui);
         if (file != null) {
@@ -287,7 +287,7 @@ public static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
  * @param fileName Name of file whose type is desired.
  * @return String representing identified type of file with provided name.
  */
-public static String identifyFileTypeUsingFilesProbeContentType(String fileName)
+private static String identifyFileTypeUsingFilesProbeContentType(String fileName)
 
 {
         String fileType = "Undetermined";
@@ -311,14 +311,63 @@ public static String identifyFileTypeUsingFilesProbeContentType(String fileName)
  *
  * @param fileName Name of file whose type is desired.
  */
-public static void setFileTypeIntoInfoBar(String fileName){
+protected static void setFileTypeIntoInfoBar(String fileName){
         String fileType = identifyFileTypeUsingFilesProbeContentType(fileName);
         TerminalText.fileTypeLabel.setText( fileType +"  || ");
+}
 
+/**
+ * Displays the License for Terminal Text as a message dialog
+ *
+ * @param gui A MultiWindowTextGUI and is used to build various gui elements
+ */
+protected static void displayLicense(MultiWindowTextGUI gui){
+        try {
+                MessageDialogButton buttonResponse = new MessageDialogBuilder()
+                                                     .setTitle("Terminal Text License")
+                                                     .setText(new String(Files.readAllBytes(Paths.get("LICENSE"))))
+                                                     .addButton(MessageDialogButton.Close)
+                                                     .build()
+                                                     .showDialog(gui);
+        } catch (IOException ioe) {
+                ioe.printStackTrace();
+        }
+}
 
+/**
+ * Displays the FAQ for Terminal Text as a message dialog
+ *
+ * @param gui A MultiWindowTextGUI and is used to build various gui elements
+ */
+protected static void displayFAQ(MultiWindowTextGUI gui){
+        try {
+                MessageDialogButton buttonResponse = new MessageDialogBuilder()
+                                                     .setTitle("Frequently Asked Questions")
+                                                     .setText(new String(Files.readAllBytes(Paths.get("FAQ"))))
+                                                     .addButton(MessageDialogButton.Close)
+                                                     .build()
+                                                     .showDialog(gui);
+        } catch (IOException ioe) {
+                ioe.printStackTrace();
+        }
+}
 
-
-
+/**
+ * Displays the About info for Terminal Text as a message dialog
+ *
+ * @param gui A MultiWindowTextGUI and is used to build various gui elements
+ */
+protected static void displayAbout(MultiWindowTextGUI gui){
+        try {
+                MessageDialogButton buttonResponse = new MessageDialogBuilder()
+                                                     .setTitle("About Terminal Text")
+                                                     .setText(new String(Files.readAllBytes(Paths.get("ABOUT"))))
+                                                     .addButton(MessageDialogButton.Close)
+                                                     .build()
+                                                     .showDialog(gui);
+        } catch (IOException ioe) {
+                ioe.printStackTrace();
+        }
 }
 
 
