@@ -11,10 +11,19 @@ import java.io.IOException;
 
 class InfoBar {
 
-protected static void updateAllInfo(Path filepath){
-        updateFileType(filepath);
+/**
+ * This Method updates the infobar at the bottom of the
+ * editor. This includes the line count, last saved time
+ * stamp and the filetype.
+ *
+ * @param Path filePath is the path of the file you would
+ * like to use to update the values, this should always be
+ * the same file this is currently open in the editor.
+ */
+protected static void updateAllInfo(Path filePath){
+        updateFileType(filePath);
         updateLineCount();
-        updateSavedTimeStamp(filepath);
+        updateSavedTimeStamp(filePath);
 }
 
 
@@ -30,12 +39,17 @@ private static void updateLineCount() {
 /**
  * This method gets the current time HH:mm and updates
  * TerminalText.lastSave with the current time
+ *
+ * @param Path filePath is the path of the file you would
+ * like to use to update the last saved time stamp, this
+ * should always be the same file this is currently open
+ * in the editor.
  */
-private static void updateSavedTimeStamp(Path filepath) {
+private static void updateSavedTimeStamp(Path filePath) {
         // get the current hour and minute
         String timeStamp = new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime());
         // get the filename from the currentOpenFilePath
-        String filename = filepath.getFileName().toString();
+        String filename = filePath.getFileName().toString();
         // Concatinate everything
         TerminalText.lastSaveLabel.setText( filename +" last saved at "+ timeStamp +" || ");
 }

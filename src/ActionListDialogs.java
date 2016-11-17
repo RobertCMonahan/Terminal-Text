@@ -43,14 +43,14 @@ public static void fileDialog(MultiWindowTextGUI gui){
                            @Override
                            public void run() {
                                    Utils.overwrite(Utils.currentOpenFileString, true);
+                                   Warning.savedDialog(gui, Utils.currentOpenFilePath);
                            }
                    })
         .addAction("Save As...", new Runnable() {
                            @Override
                            public void run() {
                                    Utils.newSaveAs(gui, "saveas");
-                                   // this line was causeing a crash not totally sure why yet, I should try this again though because ive changed alot for the askForFilePath
-                                   //WriteToFile.overwrite(filepath);
+                                   Warning.savedDialog(gui, Utils.currentOpenFilePath);
 
                            }
                    })
@@ -60,13 +60,25 @@ public static void fileDialog(MultiWindowTextGUI gui){
 
                                    // needs to check in its a new file or not so it can ask for a file path to save to
                                    Utils.overwrite(Utils.currentOpenFileString, true);
-                                   TerminalText.shutdown();
+                                   Warning.savedDialog(gui, Utils.currentOpenFilePath);
+
+                                   // asks the user if they really do want to exit
+                                   boolean userExit = Warning.quitWarning(gui);
+                                   if (userExit == true) {
+                                           TerminalText.shutdown();
+                                   }
                            }
                    })
         .addAction("Quit", new Runnable() {
                            @Override
                            public void run() {
-                                   TerminalText.shutdown();
+                                   // asks the user if they really do want to exit
+                                   boolean userExit = Warning.quitWarning(gui);
+                                   if (userExit == true) {
+                                           TerminalText.shutdown();
+                                   }
+
+
                            }
                    })
         .build()

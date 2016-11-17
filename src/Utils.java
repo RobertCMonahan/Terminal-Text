@@ -15,33 +15,6 @@ class Utils {
 protected static String currentOpenFileString;
 protected static Path currentOpenFilePath;
 
-/**
- * This method is used to prompt the user for a Filepath using
- * a TextInputDialog. If only a file name is entered it uses
- * the present working directory to complete the Filepath.
- * the returned File is not checked for validity
- *
- * @param gui A MultiWindowTextGUI and is used to build the TextInputDialog
- * @return File This returns whatever the user inputed as a File
- */
-private static File askForFilePath(MultiWindowTextGUI gui){
-        // get the present working directory
-        String pwd = Paths.get(".").toAbsolutePath().normalize().toString();
-        // open dialog asking for filePath'
-        String input = new TextInputDialogBuilder()
-                       .setTextBoxSize(new TerminalSize(70,1))
-                       .setTitle("Enter the Filename or Filepath you would like to save as")
-                       .setDescription("the present working directory is\n" + pwd)
-                       .build()
-                       .showDialog(gui);
-
-        // when cancel is not selected (cancel == null)
-        if (input != null) {
-                return new File(input);
-        }
-        return null;
-
-}
 
 /**
  * This method is used to overwrite a file using the text
@@ -100,35 +73,11 @@ protected static void openFile(MultiWindowTextGUI gui){
                 // gets path as a Path
                 currentOpenFilePath = choosenFile.toPath();
 
-                loadFileIntoEditor();
+                loadFileIntoEditor(currentOpenFilePath);
         } else {
                 // when cancel is selected do nothing
                 // laterna automaticlly closes the dialog
         }
-}
-
-/**
- * This method is used to load a file into the textBox by
- * reading the file into a string and then setting the
- * textBox as the string.
- *
- * The major flaw is that then entire file is stored in memory
- * before it's loaded into the textBox so this will not work
- * with files to large to store in memory.
- *
- * This method also updates the line count & last saved timestamp.
- */
-private static void loadFileIntoEditor(){
-        // read the file into the textBox
-        // This method is only approprate for smallish Files
-        try {
-                TerminalText.textBox.setText(new
-                                             String(Files.readAllBytes(Paths.get(currentOpenFileString))) );
-        } catch (IOException ioe) {
-                ioe.printStackTrace();
-        }
-        // update InfoBar
-        InfoBar.updateAllInfo(currentOpenFilePath);
 }
 
 /**
@@ -162,6 +111,7 @@ protected static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
                                 if (newOrSaveAs.equals("new")) {
                                         // empty file
                                         overwrite(currentOpenFileString, false);
+                                        loadFileIntoEditor(currentOpenFilePath);
                                 } else {
                                         // saveas
                                         overwrite(currentOpenFileString, true);
@@ -180,7 +130,7 @@ protected static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
                                 currentOpenFilePath = file.toPath();
                                 if (newOrSaveAs.equals("new")) {
                                         // load a blank file into the editor
-                                        loadFileIntoEditor();
+                                        loadFileIntoEditor(currentOpenFilePath);
                                 } else {
                                         // if saveas
                                         // overwrite using the text in the editor
@@ -197,6 +147,61 @@ protected static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
                         }
                 }
         }
+}
+
+/**
+ * This method is used to load a file into the textBox by
+ * reading the file into a string and then setting the
+ * textBox as the string.
+ *
+ * The major flaw is that then entire file is stored in memory
+ * before it's loaded into the textBox so this will not work
+ * with files to large to store in memory.
+ *
+ * This method also updates the line count & last saved timestamp.
+ * @param Path filePath is the filepath of the file you would like
+ * load into the editor
+ */
+private static void loadFileIntoEditor(Path filePath){
+        // read the file into the textBox
+        // This method is only approprate for smallish Files
+        String filePathString = filePath.toString();
+        try {
+                TerminalText.textBox.setText(new
+                                             String(Files.readAllBytes(Paths.get(filePathString))) );
+        } catch (IOException ioe) {
+                ioe.printStackTrace();
+        }
+        // update InfoBar
+        InfoBar.updateAllInfo(filePath);
+}
+
+/**
+ * This method is used to prompt the user for a Filepath using
+ * a TextInputDialog. If only a file name is entered it uses
+ * the present working directory to complete the Filepath.
+ * the returned File is not checked for validity
+ *
+ * @param gui A MultiWindowTextGUI and is used to build the TextInputDialog
+ * @return File This returns whatever the user inputed as a File
+ */
+private static File askForFilePath(MultiWindowTextGUI gui){
+        // get the present working directory
+        String pwd = Paths.get(".").toAbsolutePath().normalize().toString();
+        // open dialog asking for filePath'
+        String input = new TextInputDialogBuilder()
+                       .setTextBoxSize(new TerminalSize(70,1))
+                       .setTitle("Enter the Filename or Filepath you would like to save as")
+                       .setDescription("the present working directory is\n" + pwd)
+                       .build()
+                       .showDialog(gui);
+
+        // when cancel is not selected (cancel == null)
+        if (input != null) {
+                return new File(input);
+        }
+        return null;
+
 }
 
 }

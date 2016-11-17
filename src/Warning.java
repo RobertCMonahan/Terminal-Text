@@ -2,6 +2,7 @@ import com.googlecode.lanterna.gui2.MultiWindowTextGUI;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogBuilder;
 import com.googlecode.lanterna.gui2.dialogs.MessageDialogButton;
 import java.io.File;
+import java.nio.file.Path;
 
 
 class Warning {
@@ -42,9 +43,44 @@ protected static boolean overwriteWarning(MultiWindowTextGUI gui, File f){
  * @return boolean If the user selects yes (wants to quit without saving)
  * true is returned. And false if no is selected.
  */
-protected static boolean quitWarning(){
+protected static boolean quitWarning(MultiWindowTextGUI gui){
         // create MessageDialogButton what ask the user if they really want to quit
-        return true;
+        MessageDialogButton buttonResponse = new MessageDialogBuilder()
+                                             .setTitle("")
+                                             .setText("Are you sure you would like to Quit?")
+                                             .addButton(MessageDialogButton.No)
+                                             .addButton(MessageDialogButton.Yes)
+                                             .build()
+                                             .showDialog(gui);
+
+        String warningInput = buttonResponse.toString();
+
+        if (warningInput.equals("Yes")) {
+                // user wants to quit
+                return true;
+        }
+        // user dosent want to quit
+        return false;
+}
+
+/**
+ * This method opens a popup dialog telling the user that a file has been saved
+ *
+ * @param gui A MultiWindowTextGUI and is used to build the dialog
+ *
+ * @param filePath Path is the Path of the file that has just been saved.
+ */
+protected static void savedDialog(MultiWindowTextGUI gui, Path filePath){
+
+        String fileName = filePath.getFileName().toString();
+
+        MessageDialogButton buttonResponse = new MessageDialogBuilder()
+                                             .setTitle("")
+                                             .setText(fileName +" saved")
+                                             .addButton(MessageDialogButton.OK)
+                                             .build()
+                                             .showDialog(gui);
+
 }
 
 
