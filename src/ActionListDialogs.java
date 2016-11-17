@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.io.IOException;
 
-public class ActionListDialogs {
+class ActionListDialogs {
 //Create Action List Dialogs
 
 /**
@@ -91,19 +91,19 @@ public static void helpDialog(MultiWindowTextGUI gui){
         .addAction("View Licence", new Runnable() {
                            @Override
                            public void run() {
-                                   Utils.displayLicense(gui);
+                                   Help.displayLicense(gui);
                            }
                    })
         .addAction("FAQ", new Runnable() {
                            @Override
                            public void run() {
-                                   Utils.displayFAQ(gui);
+                                   Help.displayFAQ(gui);
                            }
                    })
         .addAction("About Terminal Text", new Runnable() {
                            @Override
                            public void run() {
-                                   Utils.displayAbout(gui);
+                                   Help.displayAbout(gui);
                            }
                    })
         .build()

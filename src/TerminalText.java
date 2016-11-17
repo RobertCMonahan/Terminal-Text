@@ -71,14 +71,13 @@ public static void main(String[] args) throws IOException {
                                                }
                                        });
 
-
-
         // add all components for the top Pannel
         topPanel.addComponent(fileButton);
         topPanel.addComponent(helpButton);
 
         mainPanel.addComponent(topPanel.withBorder(Borders.singleLine()));
         // End Top Pannel Stuff //
+
 
 
         //Panel leftPanel = new Panel();
@@ -107,6 +106,8 @@ public static void main(String[] args) throws IOException {
 
 //start gui
         gui.addWindowAndWait(window);
+
+        /// !!!!!!!!!! create and load a blank file named untitled in the temp folder
 
 }
 

@@ -1,0 +1,2 @@
+java -cp '.:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/lanerna-3/lanterna-3.0.0-beta3.jar' TerminalText
+
