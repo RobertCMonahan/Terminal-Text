@@ -10,6 +10,8 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import java.io.IOException;
 import java.util.Arrays;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class TerminalText {
 
@@ -42,7 +44,6 @@ public static void main(String[] args) throws IOException {
 
         Panel mainPanel = new Panel();
         mainPanel.setLayoutManager(new BorderLayout());
-
 
         // Sets the textbox to be in the center of the screen
         //TextBox textBox = new TextBox("", TextBox.Style.MULTI_LINE);
@@ -78,12 +79,6 @@ public static void main(String[] args) throws IOException {
         mainPanel.addComponent(topPanel.withBorder(Borders.singleLine()));
         // End Top Pannel Stuff //
 
-
-
-        //Panel leftPanel = new Panel();
-        //leftPanel.setLayoutData(BorderLayout.Location.LEFT);
-        //mainPanel.addComponent(leftPanel.withBorder(Borders.singleLine("left")));
-
         // Begin Bottom Pannel Stuff //
         Panel bottomPanel = new Panel();
         bottomPanel.setLayoutData(BorderLayout.Location.BOTTOM);
@@ -96,26 +91,22 @@ public static void main(String[] args) throws IOException {
         bottomPanel.addComponent(lastSaveLabel);
         bottomPanel.addComponent(fileTypeLabel);
 
-
         mainPanel.addComponent(bottomPanel.withBorder(Borders.singleLine("")));
         // End Bottom Pannel Stuff //
 
         window.setComponent(mainPanel);
 
-
-
-//start gui
+        Tabs.createInitalFile();
+        
+        //start gui
         gui.addWindowAndWait(window);
 
-        /// !!!!!!!!!! create and load a blank file named untitled in the temp folder
-
 }
-
 
 /**
  * This method shuts down laterna and the text editor
  */
-public static void shutdown(){
+protected static void shutdown(){
         window.close();
         /* not sure if these are nesscery but others used
          * this to show down laterna, but they cause an

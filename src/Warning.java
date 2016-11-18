@@ -34,7 +34,6 @@ protected static boolean overwriteWarning(MultiWindowTextGUI gui, File f){
         return false;
 }
 
-
 /**
  * This method opens when a user selects quit from the file menu
  *
@@ -83,7 +82,6 @@ protected static void savedDialog(MultiWindowTextGUI gui, Path filePath){
 
 }
 
-
 /**
  * This method opens a error dialog stating the users file path was invalid
  *
@@ -111,7 +109,5 @@ protected static boolean invalidPathError(MultiWindowTextGUI gui, File f){
         // user chose to close dialog
         return false;
 }
-
-
 
 }

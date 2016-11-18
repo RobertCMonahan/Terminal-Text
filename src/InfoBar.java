@@ -1,15 +1,17 @@
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.regex.Pattern;
 import java.util.HashMap;
 import java.util.Map;
-import java.nio.file.Files;
-import java.io.File;
-import java.nio.file.Path;
-import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 class InfoBar {
+
 
 /**
  * This Method updates the infobar at the bottom of the
@@ -25,7 +27,6 @@ protected static void updateAllInfo(Path filePath){
         updateLineCount();
         updateSavedTimeStamp(filePath);
 }
-
 
 /**
  * This method counts the lines in the editor and updates
@@ -50,8 +51,17 @@ private static void updateSavedTimeStamp(Path filePath) {
         String timeStamp = new SimpleDateFormat("HH:mm").format(Calendar.getInstance().getTime());
         // get the filename from the currentOpenFilePath
         String filename = filePath.getFileName().toString();
-        // Concatinate everything
-        TerminalText.lastSaveLabel.setText( filename +" last saved at "+ timeStamp +" || ");
+
+        // if the files is a temp untitled file remove the string of numbers and just call it untitled
+        Pattern p = Pattern.compile("\\Auntitled\\d{19}.*");
+        Matcher m = p.matcher(filename);
+        boolean matchFound = m.matches();
+        if (matchFound == true) {
+                TerminalText.lastSaveLabel.setText( "untitled || ");
+        } else {
+                // Concatinate everything
+                TerminalText.lastSaveLabel.setText( filename +" last saved at "+ timeStamp +" || ");
+        }
 }
 
 /*

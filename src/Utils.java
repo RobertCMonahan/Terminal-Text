@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 class Utils {
@@ -24,7 +26,7 @@ protected static Path currentOpenFilePath;
  *
  * @param filePath This is the filepath to be overwriten
  */
-protected static void overwrite(String filePath, boolean useTextBox) {
+protected static void overwrite(MultiWindowTextGUI gui, String filePath, boolean useTextBox) {
         File file = new File(filePath);
         String source;
         FileWriter fw;
@@ -35,16 +37,18 @@ protected static void overwrite(String filePath, boolean useTextBox) {
         }
 
         try{
-                fw = new FileWriter(file, false); // load file into the FileWriter and set to overwrite (true for the 2nd arg set the FileWriter to append to the document)
+                fw = new FileWriter(file, false);         // load file into the FileWriter and set to overwrite (true for the 2nd arg set the FileWriter to append to the document)
                 fw.write(source);
                 fw.close();
 
                 //update InfoBar
                 InfoBar.updateAllInfo(currentOpenFilePath);
+                Warning.savedDialog(gui, currentOpenFilePath);
 
         } catch (IOException ioe) {
                 ioe.printStackTrace();
         }
+
 }
 
 /**
@@ -92,35 +96,36 @@ protected static void openFile(MultiWindowTextGUI gui){
  * valid the path the user is prompted for a new path.
  *
  * @param gui A MultiWindowTextGUI and is used to build various gui elements
- * @param newOrSaveAs is used to determine if the user wants to create
+ * @param operation is used to determine if the user wants to create
  * a new file or save existing work as a certin file name. It changes a
  * few minor but important steps.
  */
-protected static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
+protected static void newSaveAs(MultiWindowTextGUI gui, String operation){
         // called from the newFile in ActionListDialogs
         File file = askForFilePath(gui);
         if (file != null) {
                 // test if file exists
-                if (file.exists()) {
+                if (file.exists() ) {
                         // if file exists popup the overwriteWarning
                         boolean overwrite = Warning.overwriteWarning(gui, file);
                         if (overwrite == true) {
                                 // user wants to overwrite file
                                 currentOpenFileString = file.getPath();
                                 currentOpenFilePath = file.toPath();
-                                if (newOrSaveAs.equals("new")) {
+                                if (operation.equals("new")) {
                                         // empty file
-                                        overwrite(currentOpenFileString, false);
+                                        overwrite(gui, currentOpenFileString, false);
                                         loadFileIntoEditor(currentOpenFilePath);
                                 } else {
                                         // saveas
-                                        overwrite(currentOpenFileString, true);
+                                        overwrite(gui, currentOpenFileString, true);
+                                        Warning.savedDialog(gui, currentOpenFilePath);
                                 }
 
                         } else {
                                 // user dosent want to overwrite
                                 // start over
-                                newSaveAs(gui, newOrSaveAs);
+                                newSaveAs(gui, operation);
                         }
                 } else {
                         // file dosent exist
@@ -128,13 +133,14 @@ protected static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
                                 file.createNewFile();
                                 currentOpenFileString = file.getPath();
                                 currentOpenFilePath = file.toPath();
-                                if (newOrSaveAs.equals("new")) {
+                                if (operation.equals("new")) {
                                         // load a blank file into the editor
                                         loadFileIntoEditor(currentOpenFilePath);
                                 } else {
                                         // if saveas
                                         // overwrite using the text in the editor
-                                        overwrite(currentOpenFileString, true);
+                                        overwrite(gui, currentOpenFileString, true);
+                                        Warning.savedDialog(gui, currentOpenFilePath);
                                 }
                         } catch (IOException ioe) {
                                 System.out.println("IOException");
@@ -142,7 +148,7 @@ protected static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
                                 // call invalidPath Dialogs
                                 boolean retry = Warning.invalidPathError(gui, file);
                                 if (retry == true) {
-                                        newSaveAs(gui, newOrSaveAs);
+                                        newSaveAs(gui, operation);
                                 }
                         }
                 }
@@ -162,13 +168,11 @@ protected static void newSaveAs(MultiWindowTextGUI gui, String newOrSaveAs){
  * @param Path filePath is the filepath of the file you would like
  * load into the editor
  */
-private static void loadFileIntoEditor(Path filePath){
+protected static void loadFileIntoEditor(Path filePath){
         // read the file into the textBox
         // This method is only approprate for smallish Files
-        String filePathString = filePath.toString();
         try {
-                TerminalText.textBox.setText(new
-                                             String(Files.readAllBytes(Paths.get(filePathString))) );
+                TerminalText.textBox.setText( new String(Files.readAllBytes(filePath)) );
         } catch (IOException ioe) {
                 ioe.printStackTrace();
         }

@@ -4,9 +4,7 @@ import com.googlecode.lanterna.gui2.dialogs.FileDialogBuilder;
 import com.googlecode.lanterna.TerminalSize;
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.Files;
-import java.io.IOException;
+
 
 class ActionListDialogs {
 //Create Action List Dialogs
@@ -42,25 +40,21 @@ public static void fileDialog(MultiWindowTextGUI gui){
         .addAction("Save", new Runnable() {
                            @Override
                            public void run() {
-                                   Utils.overwrite(Utils.currentOpenFileString, true);
-                                   Warning.savedDialog(gui, Utils.currentOpenFilePath);
+                                   Utils.newSaveAs(gui, "save");
+                                   //Utils.overwrite(gui, Utils.currentOpenFileString, true);
                            }
                    })
         .addAction("Save As...", new Runnable() {
                            @Override
                            public void run() {
                                    Utils.newSaveAs(gui, "saveas");
-                                   Warning.savedDialog(gui, Utils.currentOpenFilePath);
-
                            }
                    })
         .addAction("Save and Quit", new Runnable() {
                            @Override
                            public void run() {
-
                                    // needs to check in its a new file or not so it can ask for a file path to save to
-                                   Utils.overwrite(Utils.currentOpenFileString, true);
-                                   Warning.savedDialog(gui, Utils.currentOpenFilePath);
+                                   Utils.overwrite(gui, Utils.currentOpenFileString, true);
 
                                    // asks the user if they really do want to exit
                                    boolean userExit = Warning.quitWarning(gui);
