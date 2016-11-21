@@ -102,12 +102,33 @@ protected static void openFile(MultiWindowTextGUI gui){
  */
 protected static void newSaveAs(MultiWindowTextGUI gui, String operation){
         // called from the newFile in ActionListDialogs
-        File file = askForFilePath(gui);
+        File file;
+
+        // look for a temp untitled file
+        String filename = currentOpenFilePath.getFileName().toString();
+        Pattern p = Pattern.compile("\\Auntitled\\d{1,}.*");
+        Matcher m = p.matcher(filename);
+        boolean matchFound = m.matches();
+
+        // if the file is a temp or the user choose "new" or "save as" then ask for the file path
+        if ((operation == "saveas") || (operation == "new") || ((matchFound == true) && (operation == "save"))) {
+                file = askForFilePath(gui);
+        } else { // this will exicute when the user selected "save" and it is not a temp file
+                file = new File(currentOpenFileString);
+        }
+
+
         if (file != null) {
                 // test if file exists
                 if (file.exists() ) {
                         // if file exists popup the overwriteWarning
-                        boolean overwrite = Warning.overwriteWarning(gui, file);
+                        boolean overwrite;
+                        if ((matchFound == false) && (operation == "save")) {
+                                overwrite = true;
+                        } else{
+                                overwrite = Warning.overwriteWarning(gui, file);
+                        }
+
                         if (overwrite == true) {
                                 // user wants to overwrite file
                                 currentOpenFileString = file.getPath();

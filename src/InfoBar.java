@@ -53,7 +53,7 @@ private static void updateSavedTimeStamp(Path filePath) {
         String filename = filePath.getFileName().toString();
 
         // if the files is a temp untitled file remove the string of numbers and just call it untitled
-        Pattern p = Pattern.compile("\\Auntitled\\d{19}.*");
+        Pattern p = Pattern.compile("\\Auntitled\\d{1,}.*");
         Matcher m = p.matcher(filename);
         boolean matchFound = m.matches();
         if (matchFound == true) {

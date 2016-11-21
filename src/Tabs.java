@@ -9,9 +9,12 @@ protected static void createInitalFile(){
                 Path tempDir = Files.createTempDirectory("temp");
                 Path untitled = Files.createTempFile(tempDir, "untitled", ".txt");
                 Utils.loadFileIntoEditor(untitled);
+                Utils.currentOpenFileString = String.valueOf(untitled);
+                Utils.currentOpenFilePath = untitled;
 
         } catch (IOException ioe) {
                 ioe.printStackTrace();
         }
+
 }
 }
