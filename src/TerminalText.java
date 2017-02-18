@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+
 public class TerminalText {
 
 protected static Label lastSaveLabel;
@@ -97,7 +98,7 @@ public static void main(String[] args) throws IOException {
         window.setComponent(mainPanel);
 
         Tabs.createInitalFile();
-        
+
         //start gui
         gui.addWindowAndWait(window);
 

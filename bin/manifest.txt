@@ -1,0 +1,2 @@
+Main-Class: TerminalText
+Class-Path: ../lib/lanterna-3.0.0-beta3.jar
