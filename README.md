@@ -13,7 +13,7 @@ Terminal Text is a simple text editor that can be launched inside a terminal win
 0. Ensure you have the Java 1.8.0 or higher
 
   ```
-  > java -verison
+  java -verison
   ```
 
 1. Download the Terminal-Text repository
@@ -21,13 +21,13 @@ Terminal Text is a simple text editor that can be launched inside a terminal win
 3. Locate the terminal-text.sh file and make it executable
 
   ```
-  > chmod +x terminal-text.sh
+  chmod +x terminal-text.sh
   ```
 
 4. Execute terminal-text.sh
 
   ```
-  > ./terminal-text.sh
+  ./terminal-text.sh
   ```
 
 --
